@@ -1,0 +1,47 @@
+#
+# Maintainer: Mahmoud Mohamed (00xWolf) <mmsaeed509@gmail.com> , <https://github.com/mmsaeed509>
+#
+
+pkgname=rtl8814au-dkms
+_pkgname=rtl8814au
+pkgver=5.8.5.1
+pkgrel=1
+pkgdesc="Linux Driver for USB WiFi Adapters that are based on the RTL8814AU Chipset"
+arch=('any')
+url="https://github.com/morrownr/8814au"
+license=('GPL2')
+
+depends=(
+	'dkms'
+	'linux-headers'
+	)
+makedepends=('git')
+
+conflicts=("${_pkgname}")
+
+source=(
+	"git+https://github.com/morrownr/8814au.git"
+	'arm.patch'
+	)
+sha256sums=(
+	'SKIP'
+	'SKIP'
+	)
+
+groups=('exodia-drivers-modules')
+install=${pkgname}.install
+
+package() {
+
+	if [ "$CARCH" = "arm" ] || [ "$CARCH" = "armv6h" ] || [ "$CARCH" = "armv7h" ] || [ "$CARCH" = "aarch64" ]; 
+		then
+			msg2 "Applying patch for ARM architecture..."
+			patch ${srcdir}/rtl8814au/Makefile -i ${srcdir}/arm.patch
+	fi
+
+	cd ${srcdir}/8814au/
+    mkdir -p ${pkgdir}/usr/src/${_pkgname}-${pkgver}
+    cp -rf . ${pkgdir}/usr/src/${_pkgname}-${pkgver}
+    mkdir -p ${pkgdir}/etc/modprobe.d
+    cp -f 8814au.conf ${pkgdir}/etc/modprobe.d
+}
