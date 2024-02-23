@@ -1,0 +1,41 @@
+#
+# Maintainer: Mahmoud Mohamed (00xWolf) <mmsaeed509@gmail.com> , <https://github.com/mmsaeed509>
+#
+
+pkgname=rtkit
+pkgver=0.13
+pkgrel=2
+pkgdesc="Realtime Policy and Watchdog Daemon"
+url="https://github.com/heftig/rtkit"
+arch=("any")
+license=(GPL3 custom:BSD)
+depends=('dbus' 'polkit' 'systemd')
+makedepends=('git' 'meson' 'vim')
+install=${pkgname}.install
+
+prepare() {
+
+	cp -af ../usr/. ${srcdir}
+
+}
+
+
+package() {
+
+	local USR_DIR=${pkgdir}/usr
+	local BIN_DIR=${USR_DIR}/bin
+    local INCLUDE_DIR=${USR_DIR}/include
+    local LIB_DIR=${USR_DIR}/lib
+    local SHARE_DIR=${USR_DIR}/share
+
+	mkdir -p "${USR_DIR}" "${BIN_DIR}" "${INCLUDE_DIR}" "${LIB_DIR}" "${SHARE_DIR}"
+
+    cp -r "${srcdir}"/bin/*     "${BIN_DIR}"
+    cp -r "${srcdir}"/include/* "${INCLUDE_DIR}"
+	cp -r "${srcdir}"/lib/*	    "${LIB_DIR}"
+    cp -r "${srcdir}"/share/*   "${SHARE_DIR}"
+
+    chmod +x "${BIN_DIR}"/*
+
+	
+}
